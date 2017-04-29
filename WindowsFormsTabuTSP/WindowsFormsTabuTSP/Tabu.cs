@@ -19,7 +19,7 @@ namespace WindowsFormsTabuTSP
         public Tabu(LocationMap map)
         {
             this.map = map; // use the provided LocationMap for TSP
-            tabuListSize = (int)Math.Sqrt(map.PointCollection.Count) + 1; // heuristic for a good list size
+            tabuListSize = (int)Math.Sqrt(map.PointCollection.Count) + 2; // heuristic for a good list size
 
             // assume LocationMap can choose whether to loop the last point in the path back to the first point
             path = new int[map.PointCollection.Count];

@@ -13,13 +13,15 @@ namespace WindowsFormsTabuTSP
     public partial class Form1 : Form
     {
         int circleRadiusPixels = 10;
-        Pen pen = new Pen(Color.Black);
+        Pen pen;
         Pen penBold;
 
         List<Tuple<double, double>> pointsForTSP;
         bool beginTabuSearch;
         Tabu tabuSearch;
         long delayCounter = 0;
+
+        bool refreshControlsOnLoad = true;
 
         public Form1()
         {
@@ -31,7 +33,8 @@ namespace WindowsFormsTabuTSP
             beginTabuSearch = false;
             pointsForTSP = new List<Tuple<double, double>>();
 
-            penBold = new Pen(Color.FromArgb((int)(0.3*255), 0, 0, 0), (float)(circleRadiusPixels / 1.5));
+            pen = new Pen(Color.FromArgb((int)(0.7 * 255), 0, 0, 0));
+            penBold = new Pen(Color.FromArgb((int)(0.3*255), 240, 240, 0), (float)(circleRadiusPixels / 1.5));
         }
 
         void DrawTSPPath(int[] path, Pen thisPen, PaintEventArgs e)
@@ -51,7 +54,6 @@ namespace WindowsFormsTabuTSP
 
         protected override void OnPaint(PaintEventArgs e)
         {
-
             for (int i = 0; i < pointsForTSP.Count; i++)
             {
                 Tuple<double, double> point = pointsForTSP[i];
@@ -63,11 +65,11 @@ namespace WindowsFormsTabuTSP
 
             if (beginTabuSearch && tabuSearch.GetPath().Length > 0)
             {
-                if (delayCounter++ % 500 == 0) // delay
+                if (delayCounter++ % 300 == 0) // delay
                 {
                     tabuSearch.SearchOneIteration();
                 }
-                
+
                 // tabuSearch should not be null anymore at this point
 
                 int[] path = tabuSearch.GetPath();
@@ -75,8 +77,21 @@ namespace WindowsFormsTabuTSP
                 int[] bestPath = tabuSearch.GetBestPath();
                 DrawTSPPath(bestPath, penBold, e); // draw the best path
             }
+            else
+            {
+                //buttonRestart.Enabled = false;
+            }
 
             Invalidate();
+            if (refreshControlsOnLoad)
+            {
+                label1.Refresh();
+                label2.Refresh();
+                label3.Refresh();
+                buttonRestart.Refresh();
+                buttonStart.Refresh();
+                refreshControlsOnLoad = false;
+            }
         }
 
         private void Form1_Click(object sender, EventArgs e)
@@ -87,16 +102,25 @@ namespace WindowsFormsTabuTSP
 
             Tuple<double, double> point = new Tuple<double, double>(mEvent.X, mEvent.Y);
             pointsForTSP.Add(point);
+            
+            Focus();
         }
 
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        private void buttonRestart_Click(object sender, EventArgs e)
         {
-            if (!beginTabuSearch)
+            beginTabuSearch = false;
+            pointsForTSP = new List<Tuple<double, double>>();
+        }
+
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            if (!beginTabuSearch && pointsForTSP.Count > 3)
             {
                 beginTabuSearch = true;
                 LocationMap map = new LocationMap();
                 map.PointCollection = pointsForTSP;
                 tabuSearch = new Tabu(map);
+                //buttonRestart.Enabled = true;
             }
         }
     }
