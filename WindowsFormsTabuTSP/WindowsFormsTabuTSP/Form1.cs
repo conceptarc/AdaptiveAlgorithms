@@ -14,6 +14,7 @@ namespace WindowsFormsTabuTSP
     {
         int circleRadiusPixels = 10;
         Pen pen;
+        Pen penLine;
         Pen penBold;
 
         List<Tuple<double, double>> pointsForTSP;
@@ -34,7 +35,9 @@ namespace WindowsFormsTabuTSP
             pointsForTSP = new List<Tuple<double, double>>();
 
             pen = new Pen(Color.FromArgb((int)(0.7 * 255), 0, 0, 0));
-            penBold = new Pen(Color.FromArgb((int)(0.3*255), 240, 240, 0), (float)(circleRadiusPixels / 1.5));
+            penLine = new Pen(Color.FromArgb((int)(0.4 * 255), 0, 0, 0));
+            penLine.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            penBold = new Pen(Color.FromArgb((int)(0.4*255), 200, 200, 0), (float)(circleRadiusPixels / 1.5));
         }
 
         void DrawTSPPath(int[] path, Pen thisPen, PaintEventArgs e)
@@ -65,21 +68,26 @@ namespace WindowsFormsTabuTSP
 
             if (beginTabuSearch && tabuSearch.GetPath().Length > 0)
             {
-                if (delayCounter++ % 300 == 0) // delay
+                if (delayCounter++ % 25 == 0) // delay
                 {
                     tabuSearch.SearchOneIteration();
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep(5);
                 }
 
                 // tabuSearch should not be null anymore at this point
 
                 int[] path = tabuSearch.GetPath();
-                DrawTSPPath(path, pen, e); // draw the current path
+                DrawTSPPath(path, penLine, e); // draw the current path
                 int[] bestPath = tabuSearch.GetBestPath();
                 DrawTSPPath(bestPath, penBold, e); // draw the best path
             }
             else
             {
                 //buttonRestart.Enabled = false;
+                System.Threading.Thread.Sleep(1);
             }
 
             Invalidate();
