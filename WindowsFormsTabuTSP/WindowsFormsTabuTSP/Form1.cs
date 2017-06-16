@@ -37,7 +37,7 @@ namespace WindowsFormsTabuTSP
             pen = new Pen(Color.FromArgb((int)(0.7 * 255), 0, 0, 0));
             penLine = new Pen(Color.FromArgb((int)(0.4 * 255), 0, 0, 0));
             penLine.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            penBold = new Pen(Color.FromArgb((int)(0.4*255), 200, 200, 0), (float)(circleRadiusPixels / 1.5));
+            penBold = new Pen(Color.FromArgb((int)(0.4*255), 70, 200, 200), (float)(circleRadiusPixels / 1.5));
         }
 
         void DrawTSPPath(int[] path, Pen thisPen, PaintEventArgs e)
